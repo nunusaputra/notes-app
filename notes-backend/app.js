@@ -5,9 +5,16 @@ const todosRouter = require("./routers/Todos");
 const notesRouter = require("./routers/Notes")
 const usersRouter = require("./routers/Users")
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 dotenv.config();
 
+const corsOption = {
+  origin: process.env.ADDRESS,
+  optionSuccessStatus: 200,
+}
+
 // using middlewares
+app.use(cors(corsOption))
 app.use(express.json());
 app.use(cookieParser())
 app.use(todosRouter);

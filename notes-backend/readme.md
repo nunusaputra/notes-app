@@ -93,3 +93,65 @@ Body: {
 Method: Delete
 Router: http://localhost:5000/notes/:id
 ```
+
+### Users Route
+1. Register
+```
+Method: POST
+Route: http://localhost:5000/users/register
+
+body: {
+    "name": "Jhon Doe",
+    "email": "jhon@gmail.com",
+    "password": "jhondoe",
+    "confPassword": "jhondoe",
+    "birthdate": "02-02-1980"
+}
+```
+
+2. Login 
+```
+Method: POST
+Route: http://localhost:5000/users/login
+
+body {
+    "email": "jhon@gmail.com",
+    "password": "jhondoe"
+}
+```
+
+3. Logout
+```
+Method: DELETE
+Route: http://localhost:5000/users/logout
+```
+
+4. Me
+```
+Method: GET
+Route: http://localhost:5000/users/me
+```
+
+5. Update Profile
+```
+Method: PUT
+Route: http://localhost:5000/users/edit/:id
+
+body {
+    "address": "new york",
+    "phone_number": "+1232927380",
+    "desc": "i'm very handsome"
+}
+```
+
+6. Change Password
+```
+Method: PUT
+Route: http://localhost:5000/users/change-password/:id
+
+body {
+    "currentPassword": "jhondoe",
+    "newPassword": "jhonDoooo",
+    "confPassword": "jhonDoooo"
+}
+```

@@ -2,6 +2,12 @@ const express = require("express");
 const { register, Login, Logout } = require("../../controllers/Login/Users");
 const { refreshToken } = require("../../controllers/Login/refreshToken");
 const { body } = require("express-validator");
+const {
+  editProfile,
+  Me,
+  changePass,
+} = require("../../controllers/Login/editProfileControllers");
+const { VerifyToken } = require("../../middleware/verifyToken");
 const router = express.Router();
 
 router.post(
@@ -43,5 +49,12 @@ router.post(
 );
 router.delete("/logout", Logout);
 router.get("/token", refreshToken);
+
+// Update User
+router.put("/edit/:id", VerifyToken, editProfile);
+router.get("/me", VerifyToken, Me);
+
+// Change password
+router.put("/change-password/:id", VerifyToken, changePass)
 
 module.exports = router;
