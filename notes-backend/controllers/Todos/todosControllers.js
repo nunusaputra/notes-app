@@ -1,10 +1,21 @@
 const Todos = require("../../models").Todos;
+const Users = require("../../models").Users;
 
 module.exports = {
   // ===================== START GET ALL TODOS ===================== //
   getTodos: async (req, res) => {
     try {
-      const todos = await Todos.findAll();
+      const todos = await Todos.findAll({
+        include: [
+          {
+            model: Users,
+            attributes: ["id", "name", "email"],
+          },
+        ],
+        where: {
+          userId: req.id,
+        },
+      });
 
       if (!todos || todos.length === 0) {
         return res.status(404).json({
@@ -30,8 +41,15 @@ module.exports = {
       const { id } = req.params;
 
       const todo = await Todos.findOne({
+        include: [
+          {
+            model: Users,
+            attributes: ["id", "name", "email"],
+          },
+        ],
         where: {
           id,
+          userId: req.id,
         },
       });
 
@@ -57,6 +75,7 @@ module.exports = {
       const todos = await Todos.create({
         title,
         isDone,
+        userId: req.id,
       });
 
       res.status(201).json({
@@ -93,6 +112,7 @@ module.exports = {
         {
           title,
           isDone,
+          userId: req.id,
         },
         {
           where: {

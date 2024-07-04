@@ -1,10 +1,21 @@
 const Notes = require("../../models").Notes;
+const Users = require("../../models").Users;
 
 module.exports = {
   // ===================== START GET ALL NOTES ===================== //
   getNotes: async (req, res) => {
     try {
-      const notes = await Notes.findAll();
+      const notes = await Notes.findAll({
+        include: [
+          {
+            model: Users,
+            attributes: ["id", "name", "email"],
+          },
+        ],
+        where: {
+          userId: req.id,
+        },
+      });
 
       if (!notes || notes.length === 0) {
         return res.status(404).json({
@@ -32,7 +43,14 @@ module.exports = {
       const note = await Notes.findOne({
         where: {
           id,
+          userId: req.id,
         },
+        include: [
+          {
+            model: Users,
+            attributes: ["id", "name", "email"],
+          },
+        ],
       });
 
       if (!note) {
@@ -65,6 +83,7 @@ module.exports = {
         important,
         date,
         desc,
+        userId: req.id,
       });
 
       res.status(201).json({
@@ -104,6 +123,7 @@ module.exports = {
           important,
           date,
           desc,
+          userId: req.id,
         },
         {
           where: {

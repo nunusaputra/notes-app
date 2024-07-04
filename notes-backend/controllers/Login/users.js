@@ -1,6 +1,7 @@
 const Users = require("../../models").Users;
 const argon = require("argon2");
 const jwt = require("jsonwebtoken");
+const { validationResult } = require("express-validator");
 
 module.exports = {
   // =================== START REGISTER =================== //
@@ -8,6 +9,13 @@ module.exports = {
     try {
       // const {id} = req.params
       const { name, email, password, confPassword, birthdate } = req.body;
+
+      const error = validationResult(req);
+      if (!error.isEmpty()) {
+        return res.status(400).json({
+          error: error.array()[0].msg,
+        });
+      }
 
       // Get user by id
       const user = await Users.findOne({
@@ -59,6 +67,13 @@ module.exports = {
     try {
       const { email, password } = req.body;
 
+      const error = validationResult(req);
+      if (!error.isEmpty()) {
+        return res.status(400).json({
+          error: error.array()[0].msg,
+        });
+      }
+
       // Get user by email
       const user = await Users.findOne({
         where: {
@@ -90,10 +105,10 @@ module.exports = {
         name: user.name,
       };
       const accessSecret = process.env.ACCESS_TOKEN_SECRET;
-      const refreshSecret = process.env.ACCESS_TOKEN_SECRET;
+      const refreshSecret = process.env.REFRESH_TOKEN_SECRET;
 
       const accessToken = jwt.sign(payload, accessSecret, {
-        expiresIn: "1m",
+        expiresIn: "1h",
       });
 
       const refreshToken = jwt.sign(payload, refreshSecret, {
